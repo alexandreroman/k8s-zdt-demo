@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: app
-          image: alexandreroman/k8s-zdt-demo:v2
+          image: alexandreroman/k8s-zdt-demo:v1
           ports:
             - containerPort: 8080
           livenessProbe:
