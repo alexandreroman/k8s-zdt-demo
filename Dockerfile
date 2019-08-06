@@ -3,11 +3,11 @@ WORKDIR /home
 COPY . .
 RUN mvn package
 
-FROM openjdk:8-jre-alpine
+FROM adoptopenjdk:11-jre-hotspot
 WORKDIR /app
 COPY --from=maven /home/target/*.jar ./
-RUN addgroup -g 1001 -S appuser && \
-    adduser -u 1001 -G appuser -S appuser appuser
+RUN addgroup --gid 1001 appuser && \
+    adduser --system --uid 1001 --gid 1001 --no-create-home --disabled-login --disabled-password appuser
 USER appuser
 
-ENTRYPOINT ["java", "-jar", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "./k8s-zdt-demo.jar"]
+CMD ["java", "-jar", "./k8s-zdt-demo.jar"]
