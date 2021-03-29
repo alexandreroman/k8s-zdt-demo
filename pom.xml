@@ -35,6 +35,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <imageName>alexandreroman/k8s-zdt-demo:v1</imageName>
+                </configuration>
             </plugin>
         </plugins>
     </build>
