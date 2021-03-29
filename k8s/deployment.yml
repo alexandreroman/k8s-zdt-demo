@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: zdt
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       role: app
@@ -29,3 +29,13 @@ spec:
               port: http
               path: /actuator/health/readiness
             initialDelaySeconds: 10
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: role
+                    operator: In
+                    values:
+                      - app
+              topologyKey: kubernetes.io/hostname
