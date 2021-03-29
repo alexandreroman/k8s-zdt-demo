@@ -23,7 +23,7 @@ There are two versions of this app:
 
 Use these [Kubernetes descriptors](k8s) to deploy app `V1`:
 ```bash
-$ kubectl apply -f k8s
+$ kubectl apply -k k8s
 namespace/zdt created
 deployment.apps/zdt created
 service/app-lb created
@@ -71,19 +71,20 @@ $ curl localhost/actuator/health
 This healthcheck is defined in the deployment descriptor:
 ```yaml
 containers:
-  - name: app
-    image: alexandreroman/k8s-zdt-demo:v1
-    ports:
+- name: app
+  image: alexandreroman/k8s-zdt-demo:v1
+  ports:
     - containerPort: 8080
-    livenessProbe:
+      name: http
+  livenessProbe:
     httpGet:
-        port: 8080
-        path: /actuator/health
+      port: http
+      path: /actuator/health/liveness
     initialDelaySeconds: 30
-    readinessProbe:
+  readinessProbe:
     httpGet:
-        port: 8080
-        path: /actuator/health
+      port: http
+      path: /actuator/health/readiness
     initialDelaySeconds: 10
 ```
 
@@ -128,16 +129,23 @@ deployed, you may see two versions running at the same time: `V1` and
 as ready.
 
 You may also edit the Kubernetes descriptor to point at the new app
-version, in [zdt-02-deployment.yml](k8s/zdt-02-deployment.yml):
+version, in [deployment.yml](k8s/deployment.yml):
 ```yaml
 containers:
   - name: app
     image: alexandreroman/k8s-zdt-demo:v2
 ```
 
+Or you may also override the image tag in [kustomization.yml](k8s/kustomization.yml):
+```yaml
+images:
+  - name: alexandreroman/k8s-zdt-demo
+    newTag: v2
+```
+
 Then, you need to update your Kubernetes deployment:
 ```bash
-$ kubectl apply -f k8s
+$ kubectl apply -k k8s
 namespace/zdt unchanged
 deployment.apps/zdt configured
 service/app-lb unchanged

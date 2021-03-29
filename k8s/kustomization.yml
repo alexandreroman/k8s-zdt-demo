@@ -1,0 +1,12 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: zdt
+resources:
+  - namespace.yml
+  - deployment.yml
+  - service.yml
+images:
+  - name: alexandreroman/k8s-zdt-demo
+    # Switch to v2 to deploy a new version.
+    newTag: v1

@@ -3,7 +3,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: zdt
-  namespace: zdt
 spec:
   replicas: 3
   selector:
@@ -19,13 +18,14 @@ spec:
           image: alexandreroman/k8s-zdt-demo:v1
           ports:
             - containerPort: 8080
+              name: http
           livenessProbe:
             httpGet:
-              port: 8080
-              path: /actuator/health
+              port: http
+              path: /actuator/health/liveness
             initialDelaySeconds: 30
           readinessProbe:
             httpGet:
-              port: 8080
-              path: /actuator/health
+              port: http
+              path: /actuator/health/readiness
             initialDelaySeconds: 10
